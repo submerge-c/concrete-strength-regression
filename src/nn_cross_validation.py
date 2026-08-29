@@ -5,7 +5,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 
-from sklearn.model_selection import KFold
+from sklearn.model_selection import train_test_split, KFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import (
     mean_absolute_error,
@@ -46,8 +46,22 @@ df.columns = [
 ]
 
 
-X = df.drop(columns=["strength"]).values
-y = df["strength"].values
+X = df.drop(columns=["strength"])
+y = df["strength"]
+
+
+# 与传统机器学习保持完全相同的 80/20 划分
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42,
+)
+
+
+# 神经网络交叉验证只使用训练集
+X = X_train.values
+y = y_train.values
 
 
 # ============================================================
